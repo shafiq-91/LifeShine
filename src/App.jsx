@@ -19,26 +19,21 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isApiError, setIsApiError] = useState(false);
-  const [isOffline, setIsOffline] = useState(false);
+  const [isOffline, setIsOffline] = useState(!navigator.onLine); // Initial offline check
 
   useEffect(() => {
-    const storedOfflineStatus = localStorage.getItem("offlineStatus");
-    
-    // Show NetError if storedOfflineStatus is true or user is offline
-    if (storedOfflineStatus === "true" || !navigator.onLine) {
-      setIsOffline(true);
-      localStorage.setItem("offlineStatus", "true");
+    // Cache offline status in localStorage
+    localStorage.setItem("offlineStatus", isOffline ? "true" : "false");
+
+    if (!isOffline) {
+      // If online, check API connection
+      axios
+        .get("http://localhost/api.php?action=read&table=school_assets")
+        .then(() => setIsApiError(false))
+        .catch(() => setIsApiError(true));
     }
 
-    // Simulate loading
-    setTimeout(() => setIsLoading(false), 1500);
-
-    // Check API status
-    axios
-      .get("http://localhost/api.php?action=read&table=school_assets")
-      .then(() => setIsApiError(false))
-      .catch(() => setIsApiError(true));
-
+    // Handle network status changes
     const handleOffline = () => {
       setIsOffline(true);
       localStorage.setItem("offlineStatus", "true");
@@ -49,18 +44,21 @@ function App() {
       localStorage.setItem("offlineStatus", "false");
     };
 
-    // Listen for online/offline events
     window.addEventListener("offline", handleOffline);
     window.addEventListener("online", handleOnline);
+
+    // Simulate loading
+    setTimeout(() => setIsLoading(false), 1500);
 
     return () => {
       window.removeEventListener("offline", handleOffline);
       window.removeEventListener("online", handleOnline);
     };
-  }, []);
+  }, [isOffline]);
 
   const toggleExpansion = () => setIsExpanded((prev) => !prev);
 
+  // Show NetError if offline or API error
   if (isOffline || isApiError) {
     return <NetError />;
   }
