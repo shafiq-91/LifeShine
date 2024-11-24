@@ -1,26 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Offline</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Network Error</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(45deg, #2c3e50, #34495e);
+      color: #fff;
       text-align: center;
-      padding: 50px;
-      background-color: #f8f9fa;
+      overflow: hidden;
     }
-    h1 {
-      color: #333;
+
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+      position: relative;
+      animation: fadeInBg 1.5s ease-out;
     }
+
+    .background-decoration {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: -1;
+      opacity: 0.15;
+      animation: zoomInBg 2s ease-out;
+    }
+
+    .background-decoration h1 {
+      font-size: 15rem;
+      font-weight: bold;
+      letter-spacing: 10px;
+      margin: 0;
+      color: #e74c3c;
+      text-shadow: 0px 8px 20px rgba(231, 76, 60, 0.6);
+    }
+
+    h2 {
+      font-size: 3.5rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 20px;
+      opacity: 0;
+      animation: fadeInText 1.5s ease-in-out 0.5s forwards;
+    }
+
     p {
-      color: #555;
+      font-size: 1.25rem;
+      margin-bottom: 30px;
+      font-weight: 300;
+      opacity: 0;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      animation: fadeInText 2s ease-in-out 1s forwards;
+    }
+
+    a {
+      padding: 18px 45px;
+      background-color: #e74c3c;
+      color: #fff;
+      font-size: 1.3rem;
+      font-weight: 700;
+      text-decoration: none;
+      border-radius: 50px;
+      box-shadow: 0px 20px 40px rgba(231, 76, 60, 0.3);
+      transform: scale(1);
+      transition: transform 0.3s ease, background-color 0.3s ease;
+      cursor: pointer;
+      display: inline-block;
+    }
+
+    a:hover {
+      background-color: #c0392b;
+      transform: scale(1.1);
+    }
+
+    @keyframes fadeInBg {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+
+    @keyframes zoomInBg {
+      0% {
+        transform: translate(-50%, -50%) scale(0.5);
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(1);
+      }
+    }
+
+    @keyframes fadeInText {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
   </style>
 </head>
 <body>
-  <h1>You Are Offline</h1>
-  <p>Please check your internet connection and try again.</p>
+  <div class="container">
+    <!-- Background Decoration -->
+    <div class="background-decoration">
+      <h1>500</h1>
+    </div>
+
+    <!-- Error Message -->
+    <h2>Network Error</h2>
+
+    <!-- Sub-text -->
+    <p>It looks like we are having trouble connecting. Please check your internet connection or try again later.</p>
+
+    <!-- Button -->
+    <a href="/">Try Again</a>
+  </div>
 </body>
 </html>
