@@ -1,0 +1,109 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import "~slick-carousel/slick/slick.css";
+@import "~slick-carousel/slick/slick-theme.css";
+/* Scrollbar styles */
+::-webkit-scrollbar {
+      width: 8px; /* Scrollbar width */
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent; /* Optional */
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(to bottom, rgba(0, 128, 0, 0), yellow);
+      border-radius: 6px; /* Round corners */
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(to bottom, #00640038, #FFD700); /* Darker shades on hover */
+    }
+  
+/* *{overflow-x: hidden;} */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #1a202c; /* Optional: Dark overlay */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Make sure it's on top of other content */
+  }
+  
+  /* Loader animation */
+  .loader {
+    width: 55px;
+    aspect-ratio: 1;
+    --g1: conic-gradient(from 90deg at 3px 3px, #0000 90deg, #fff 0);
+    --g2: conic-gradient(from -90deg at 22px 22px, #0000 90deg, #fff 0);
+    background: var(--g1), var(--g1), var(--g1), var(--g2), var(--g2), var(--g2);
+    background-size: 25px 25px;
+    background-repeat: no-repeat;
+    animation: l7 1.5s infinite;
+  }
+  
+  /* Keyframes for spinning */
+  @keyframes l7 {
+    0% {
+      background-position: 0 0, 0 100%, 100% 100%;
+    }
+    25% {
+      background-position: 100% 0, 0 100%, 100% 100%;
+    }
+    50% {
+      background-position: 100% 0, 0 0, 100% 100%;
+    }
+    75% {
+      background-position: 100% 0, 0 0, 0 100%;
+    }
+    100% {
+      background-position: 100% 100%, 0 0, 0 100%;
+    }
+  }
+  
+  @keyframes loading {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+  .wave-skeleton {
+    background: linear-gradient(
+      to right,
+      rgba(240, 240, 240, 0.8) 25%,
+      rgba(230, 230, 230, 0.9) 50%,
+      rgba(240, 240, 240, 0.8) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite ease-in-out, floating 3s infinite ease-in-out;
+    border-radius: 16px;
+  }
+  
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+  
+  @keyframes floating {
+    0% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+  
