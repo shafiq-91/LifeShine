@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import {
   AppBar,
@@ -13,9 +13,6 @@ import {
   ListItemText,
   Divider,
   Tooltip,
-  Menu,
-  MenuItem,
-  Typography,
 } from "@mui/material";
 import { Link } from "react-router-dom";  // Import Link from react-router-dom
 import MenuIcon from "@mui/icons-material/Menu";
@@ -26,40 +23,18 @@ import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
-import Brightness7Icon from "@mui/icons-material/Brightness7";
 import CloseIcon from "@mui/icons-material/Close";
 
 const Nav = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [theme, setTheme] = useState("system");
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [theme, setTheme] = useState("light");  // Only light theme now
   const [admissionOpen, setAdmissionOpen] = useState(false);
-  const openMenu = Boolean(anchorEl);
-  const admissionButtonRef = useRef(null);
 
-  const handleSubmenuClick = () => {
-    setAdmissionOpen(false); // Close the dropdown
+  const toggleDrawer = () => setDrawerOpen(!drawerOpen);
+
+  const handleThemeChange = (newTheme) => {
+    setTheme(newTheme);
   };
-
-
-  useEffect(() => {
-    const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
-      ? "dark"
-      : "light";
-    if (theme === "system") {
-      setTheme(systemTheme);
-    }
-  }, [theme]);
-
-  useEffect(() => {
-    if (theme === "light") {
-      document.body.style.backgroundColor = "#f4f9ff";
-      document.body.style.color = "#000000"; // Set body text color to black in light mode
-    } else if (theme === "dark") {
-      document.body.style.backgroundColor = "#1A202C";
-      document.body.style.color = "#f1f1f1"; // Ensure text color is white in dark mode
-    }
-  }, [theme]);
 
   const lightTheme = createTheme({
     palette: {
@@ -73,36 +48,11 @@ const Nav = () => {
     },
   });
 
-  const darkTheme = createTheme({
-    palette: {
-      mode: "dark",
-      background: {
-        default: "#1A202C", // Dark background color
-      },
-      text: {
-        primary: "#f1f1f1", // Light text color for dark mode
-      },
-    },
-  });
-
-
-  const themeConfig = theme === "dark" ? darkTheme : lightTheme;
-
-  const toggleDrawer = () => setDrawerOpen(!drawerOpen);
-
-  const handleThemeChange = (newTheme) => {
-    setTheme(newTheme);
-    setAnchorEl(null);
-  };
-
-  const handleAdmissionClick = () => {
-    setAdmissionOpen(!admissionOpen);
-  };
+  const themeConfig = lightTheme;
 
   const drawerLinks = [
     { text: "Home", icon: <HomeIcon />, path: "/" },
     { text: "Student", icon: <SchoolIcon />, path: "/student" },
-    { text: "Result", icon: <AssessmentIcon />, path: "/result" },
     {
       text: "Admission",
       icon: <PlaylistAddIcon />,
@@ -162,8 +112,6 @@ const Nav = () => {
                     boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
                   },
                 }}
-                onClick={link.text === "Admission" ? handleAdmissionClick : null}
-                ref={link.text === "Admission" ? admissionButtonRef : null}
                 component={Link} // Add Link here
                 to={link.path} // Define the path for the link
               >
@@ -172,66 +120,19 @@ const Nav = () => {
             ))}
           </Box>
 
-          {admissionOpen && (
-            <Box
-              sx={{
-                position: "absolute",
-                top: `${admissionButtonRef.current?.offsetTop + 40}px`,
-                left: `${admissionButtonRef.current?.offsetLeft}px`,
-                backgroundColor: themeConfig.palette.background.paper,
-                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
-                padding: "10px",
-                borderRadius: "5px",
-                zIndex: 1000,
-                minWidth: "160px",
-              }}
-            >
-              <Button
-                sx={{ display: "block", color: themeConfig.palette.text.primary }}
-                component={Link}
-                to="/admission/online"
-                onClick={handleSubmenuClick} // Close dropdown
-              >
-                Online Admission
-              </Button>
-              <Button
-                sx={{ display: "block", color: themeConfig.palette.text.primary }}
-                component={Link}
-                to="/admission/offline"
-                onClick={handleSubmenuClick} // Close dropdown
-              >
-                Offline Admission
-              </Button>
-            </Box>
-          )}
-
-
           <Box className="flex items-center gap-4">
-            <Tooltip title="Select Theme">
+            <Tooltip title="Light Mode">
               <IconButton
-                onClick={(e) => setAnchorEl(e.currentTarget)}
+                onClick={() => handleThemeChange("light")}
                 sx={{
                   color: themeConfig.palette.text.primary,
                   "&:hover": { bgcolor: themeConfig.palette.background.paper, transform: "scale(1.1)" },
                   transition: "transform 0.2s ease",
                 }}
               >
-                {theme === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
+                <Brightness4Icon />
               </IconButton>
             </Tooltip>
-
-            <Menu
-              anchorEl={anchorEl}
-              open={openMenu}
-              onClose={() => setAnchorEl(null)}
-              MenuListProps={{
-                "aria-labelledby": "basic-button",
-              }}
-            >
-              <MenuItem onClick={() => handleThemeChange("light")}>Light Mode</MenuItem>
-              <MenuItem onClick={() => handleThemeChange("dark")}>Dark Mode</MenuItem>
-              <MenuItem onClick={() => handleThemeChange("system")}>System Default</MenuItem>
-            </Menu>
           </Box>
         </Toolbar>
       </AppBar>
@@ -282,48 +183,45 @@ const Nav = () => {
                 button
                 onClick={() => {
                   if (link.submenu) {
-                    handleAdmissionClick(); // Open/close dropdown for submenu links
+                    setAdmissionOpen(!admissionOpen); // Open/close dropdown for submenu links
                   } else {
                     toggleDrawer(); // Close sidebar for non-submenu links
                   }
                 }}
-                component={Link} // Wrap each ListItem with Link
-                to={link.path} // Use `to` prop for navigation
+                component={Link}
+                to={link.path}
               >
                 <ListItemIcon sx={{ color: themeConfig.palette.text.primary }}>
                   {link.icon}
                 </ListItemIcon>
                 <ListItemText
                   primary={link.text}
-                  primaryTypographyProps={{
-                    fontWeight: 600,
-                    fontSize: "1rem",
+                  sx={{
                     color: themeConfig.palette.text.primary,
                   }}
                 />
               </ListItem>
               {link.submenu && admissionOpen && (
-                <List>
-                  {link.submenu.map((submenuLink) => (
+                <Box sx={{ paddingLeft: "2rem" }}>
+                  {link.submenu.map((submenuItem) => (
                     <ListItem
-                      key={submenuLink.text}
+                      key={submenuItem.text}
                       button
-                      component={Link} // Enable navigation for submenu items
-                      to={submenuLink.path}
-                      onClick={toggleDrawer} // Close sidebar when submenu is clicked
-                      sx={{ paddingLeft: "2rem" }}
+                      component={Link}
+                      to={submenuItem.path}
+                      sx={{
+                        color: themeConfig.palette.text.primary,
+                      }}
                     >
                       <ListItemText
-                        primary={submenuLink.text}
-                        primaryTypographyProps={{
-                          fontWeight: 500,
-                          fontSize: "0.95rem",
+                        primary={submenuItem.text}
+                        sx={{
                           color: themeConfig.palette.text.primary,
                         }}
                       />
                     </ListItem>
                   ))}
-                </List>
+                </Box>
               )}
             </React.Fragment>
           ))}

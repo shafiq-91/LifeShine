@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Nav from "./components/Nav";
 import Home from "./components/Home";
 import Student from "./components/Student";
-import Result from "./components/Result";
 import Admission from "./components/Admission";
 import Dashboard from "./components/Dashboard";
 import Footer from "./components/Footer";
@@ -28,6 +27,34 @@ function App() {
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
   const [isApiError, setIsApiError] = useState(false);
   const [isCallOpen, setIsCallOpen] = useState(false);
+  useEffect(() => {
+    const preventRightClick = (e) => {
+      e.preventDefault();
+    };
+
+    document.addEventListener("contextmenu", preventRightClick);
+
+    return () => {
+      document.removeEventListener("contextmenu", preventRightClick);
+    };
+  }, []);
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (
+        e.key === "F12" ||
+        (e.ctrlKey && e.shiftKey && e.key === "I") ||
+        (e.ctrlKey && e.key === "U")
+      ) {
+        e.preventDefault();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyPress);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyPress);
+    };
+  }, []);
 
   useEffect(() => {
     if (!isOffline) {
@@ -75,7 +102,6 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/student" element={<Student />} />
-            <Route path="/result" element={<Result />} />
             <Route path="/admission" element={<Admission />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/studentProfile/:id" element={<StudentProfile />} />
@@ -118,7 +144,7 @@ function App() {
             >
               <IconButton
                 onClick={toggleCall}
-                
+
               >
                 <CloseIcon />
               </IconButton>

@@ -4,7 +4,7 @@ function Admission() {
   return (
     <div>
       <h1>Admission Page</h1>
-      <p>Choose the type of admission (Online or Offline) to proceed.</p>
+      <p>Coming Soon 🥰.</p>
     </div>
   );
 }
